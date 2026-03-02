@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-deployment
+  namespace: web
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: employees-deploy
+  template:
+    metadata:
+      labels:
+        app: employees-deploy
+    spec:
+      imagePullSecrets:
+        - name: ecr-secret
+      containers:
+        - name: app
+          image: 521396012096.dkr.ecr.us-east-1.amazonaws.com/clo835-app:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: APP_COLOR
+              value: "red"
+            - name: DBHOST
+              value: "mysql-service.mysql.svc.cluster.local"
+            - name: DBPORT
+              value: "3306"
+            - name: DBUSER
+              value: "root"
+            - name: DBPWD
+              value: "pw"
+            - name: DATABASE
+              value: "employees"
